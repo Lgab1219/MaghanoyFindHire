@@ -1,0 +1,47 @@
+<?php
+
+session_start();
+
+require_once 'dbConfig.php';
+require_once 'models.php';
+require_once 'validate.php';
+
+if (isset($_POST['registerUserBtn'])) {
+    $fname = sanitizeInput($_POST['fname']);
+    $lname = sanitizeInput($_POST['lname']);
+    $email = sanitizeInput($_POST['email']);
+    $password = sanitizeInput($_POST['password']);
+    $role = sanitizeInput($_POST['role']);
+
+    if (!empty($fname) && !empty($lname) && !empty($email) && !empty($password) && !empty($role)) {
+        // Password strength check
+        if (strlen($password) < 5 || 
+            !preg_match('/[A-Z]/', $password) || 
+            !preg_match('/[a-z]/', $password) || 
+            !preg_match('/[0-9]/', $password) || 
+            !preg_match('/[^a-zA-Z0-9\s]/', $password)) {
+            $_SESSION['message'] = "Password must be at least 5 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+            header("Location: ../register.php");
+            exit;
+        }
+
+        // If password is strong, hash it.
+        $password = password_hash($password, PASSWORD_DEFAULT);
+
+        $insertQuery = registerAccount($pdo, $fname, $lname, $email, $password, $role);
+
+        if ($insertQuery) {
+            $_SESSION['message'] = "Account registered successfully!";
+            header("Location: ../login.php");
+            exit;
+        } else {
+            $_SESSION['message'] = "An error occurred during registration. Please try again.";
+            header("Location: ../register.php");
+            exit;
+        }
+    } else {
+        $_SESSION['message'] = "Please fill in all fields.";
+        header("Location: ../register.php");
+        exit;
+    }
+}
