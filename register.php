@@ -22,12 +22,23 @@ require_once 'core/handleForms.php';
         </span>
     </div>
 
-    <?php
-    if (isset($_SESSION['message'])) { ?>
-        <div class="message"><?php echo $_SESSION['message']; ?></div>
+    
+    <div class="main">
+        
+        <?php
+        if (isset($_SESSION['message'])) { ?>
+            <div class="message"><?php echo $_SESSION['message']; ?></div>
         <?php unset($_SESSION['message']); } ?>
 
-    <div class="main">
+        <div class="form_content">
+            <span>
+                <h1>Your Next Career,<br> Simplified.</h1>
+                <h2>Lightning-Fast Performance: </h2><p>Experience blazing-fast load times and seamless navigation.</p>
+                <h2>Intuitive Interface: </h2><p>A user-friendly design that makes your job search a breeze.</p>
+                <h2>Secure and Private: </h2><p>Protect your personal information with our robust security measures.</p>
+            </span>
+        </div>
+
         <div class="form">
             <h2>Register</h2>
             <form action="core/handleForms.php" method="POST">
@@ -59,8 +70,6 @@ require_once 'core/handleForms.php';
             </form>
             <p>Already have an account? Log in <a href="login.php">here</a>!</p>
         </div>
-
-        <div class="account"></div>
     </div>
 </body>
 </html>

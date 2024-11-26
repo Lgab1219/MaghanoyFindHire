@@ -6,6 +6,77 @@ require_once 'dbConfig.php';
 require_once 'models.php';
 require_once 'validate.php';
 
+// Button to search for specific job posts
+if (isset($_POST['searchJobUserBtn'])) {
+    $search = sanitizeInput($_POST['search']);
+
+    // Retrieve the logged-in user's first and last name from the session
+    $fname = $_SESSION['fname'];
+    $lname = $_SESSION['lname'];
+
+    $searchUserResults = searchPostUser($pdo, "%$search%", $fname, $lname);
+
+    // Store the search results in the session
+    $_SESSION['searchUserResults'] = $searchUserResults;
+
+    header('Location: ../HRHome.php');
+    exit();
+}
+
+// Button to search for specific job posts
+if (isset($_POST['searchJobBtn'])) {
+    unset($_SESSION['searchResults']); // Clear previous search results
+
+    // Retrieve search input and logged-in user's role
+    $search = sanitizeInput($_POST['search']);
+    $role = $_SESSION['role'];
+
+    // Perform the search
+    if ($role === 'hr') {
+        $fname = $_SESSION['fname'];
+        $lname = $_SESSION['lname'];
+        $searchResults = searchPostUser($pdo, "%$search%", $fname, $lname); // HR-specific search
+    } elseif ($role === 'applicant') {
+        $searchResults = searchPost($pdo, "%$search%"); // General search for applicants
+    }
+
+    // Store search results in the session and redirect
+    if ($searchResults !== false) {
+        $_SESSION['searchResults'] = $searchResults;
+    } else {
+        $_SESSION['message'] = "No results found.";
+    }
+
+    // Redirect based on role
+    if ($role === 'hr') {
+        header('Location: ../HRHome.php');
+    } elseif ($role === 'applicant') {
+        header('Location: ../ApplicantHome.php');
+    }
+    exit();
+}
+
+
+// Creates a job post
+if (isset($_POST['createPostBtn'])) {
+    $post_title = sanitizeInput($_POST['post_title']);
+    $post_desc = sanitizeInput($_POST['post_desc']);
+
+    $fname = $_SESSION['fname'];
+    $lname = $_SESSION['lname'];
+
+    if (!empty($post_title || !empty($post_desc))) {
+        $createPost = createPost($pdo, $post_title, $post_desc, $fname, $lname);
+
+        if($createPost) {
+            header('Location: ../HRHome.php');
+            exit();
+        } else {
+            $_SESSION['message'] = "Please fill out all the forms!";
+        }
+    }
+}
+
 // Logins account
 if (isset($_POST['loginUserBtn'])) {
     $email = $_POST['email'];
@@ -16,8 +87,10 @@ if (isset($_POST['loginUserBtn'])) {
 
         if ($loginQuery) {
             $fnameDB = $loginQuery['fname'];
+            $lnameDB = $loginQuery['lname'];
             $roleDB = $loginQuery['role'];
             $_SESSION['fname'] = $fnameDB;
+            $_SESSION['lname'] = $lnameDB;
             $_SESSION['role'] = $roleDB;
         
             if ($roleDB == "hr") {
