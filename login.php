@@ -46,10 +46,18 @@ require_once 'core/models.php';
             <p>Don't have an account? Register <a href="register.php">here</a>!</p>
         </div>
 
+        <div class="form_content">
+            <span>
+                <h1>Your Next Career,<br> Simplified.</h1>
+                <h2>Lightning-Fast Performance: </h2><p>Experience blazing-fast load times and seamless navigation.</p>
+                <h2>Intuitive Interface: </h2><p>A user-friendly design that makes your job search a breeze.</p>
+                <h2>Secure and Private: </h2><p>Protect your personal information with our robust security measures.</p>
+            </span>
+        </div>
+
     <br><br>
     <button><a href="core/unset.php" style="text-decoration: none; color: black;">Reset</a></button>
 
-        <div class="account"></div>
     </div>
 </body>
 </html>
