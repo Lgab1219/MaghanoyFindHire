@@ -6,6 +6,25 @@ require_once 'dbConfig.php';
 require_once 'models.php';
 require_once 'validate.php';
 
+// Deletes job post by ID
+if (isset($_POST['deletePostBtn'])) {
+    $postID = sanitizeInput($_POST['postID']);
+    $fname = $_SESSION['fname'];
+    $lname = $_SESSION['lname'];
+
+    $query = deletePost($pdo, $postID, $fname, $lname);
+
+    if ($query) {
+        // Set a JavaScript variable to indicate successful deletion
+        echo "<script>window.parent.postMessage('post_deleted', '*');</script>";
+        exit();
+    } else {
+        echo "<div>Post deletion not successful.</div>";
+    }
+}
+
+
+
 // Button to search for specific job posts
 if (isset($_POST['searchJobUserBtn'])) {
     $search = sanitizeInput($_POST['search']);
@@ -35,7 +54,7 @@ if (isset($_POST['searchJobBtn'])) {
     if ($role === 'hr') {
         $fname = $_SESSION['fname'];
         $lname = $_SESSION['lname'];
-        $searchResults = searchPostUser($pdo, "%$search%", $fname, $lname); // HR-specific search
+        $searchResults = searchPost($pdo, "%$search%");
     } elseif ($role === 'applicant') {
         $searchResults = searchPost($pdo, "%$search%"); // General search for applicants
     }

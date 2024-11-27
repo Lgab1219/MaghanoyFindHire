@@ -13,6 +13,15 @@ require_once 'core/handleForms.php';
     <title>Document</title>
 </head>
 <body>
+
+    <div class="nav_bar">
+            <span class="logo">
+                <h1>FindHire</h1>
+            </span>
+    </div>
+
+<br><br>
+
     <div class="form">
         <?php 
             if(isset($_SESSION['message'])) { ?>
