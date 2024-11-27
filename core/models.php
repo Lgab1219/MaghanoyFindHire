@@ -2,6 +2,27 @@
 
 require_once 'dbConfig.php';
 
+// Selects specific post by ID
+function getPostById($pdo, $postID, $fname, $lname) {
+    $query = "SELECT * FROM job_posts WHERE postID = ? AND fname = ? AND lname = ?";
+    $statement = $pdo->prepare($query);
+    $statement->execute([$postID, $fname, $lname]);
+    return $statement->fetch();
+}
+
+
+// Deletes specific job post
+function deletePost($pdo, $postID, $fname, $lname) {
+    $query = "DELETE FROM job_posts WHERE postID = ? AND fname = ? AND lname = ?";
+
+    $statement = $pdo -> prepare($query);
+    $executeQuery = $statement -> execute([$postID, $fname, $lname]);
+
+    if ($executeQuery) {
+        return true;
+    }
+}
+
 // Search for job posts
 function searchPostUser($pdo, $search, $fname, $lname){
     $query = "SELECT * FROM job_posts WHERE (post_title LIKE ? OR post_desc LIKE ?) AND fname = ? AND lname = ?";
