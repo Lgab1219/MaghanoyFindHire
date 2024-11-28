@@ -7,8 +7,11 @@ if (!isset($_GET['postID'])) {
     exit();
 }
 
+// Grab postID from URL
 $postID = $_GET['postID'];
-$post = getPostById($pdo, $postID, $_SESSION['fname'], $_SESSION['lname']); 
+
+// Get all posts by ID
+$post = getPostById($pdo, $postID); 
 
 if (!$post) {
     echo "Post not found or you are not authorized to delete this post.";
