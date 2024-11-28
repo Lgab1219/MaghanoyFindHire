@@ -31,7 +31,11 @@ require_once 'core/models.php';
         <div class="account">Hello, Applicant <?php echo $_SESSION['fname']; ?></div>
 <?php } else {
     header('Location: login.php');
-}
+    }
+
+    if (isset($_SESSION['message'])) : ?>
+        <div class="message"><?php echo $_SESSION['message']; unset($_SESSION['message']); ?></div>
+    <?php endif;
 
     $searchResults = isset($_SESSION['searchResults']) ? $_SESSION['searchResults'] : [];
     $posts = empty($searchResults) ? getAllPosts($pdo) : $searchResults;
@@ -48,7 +52,20 @@ require_once 'core/models.php';
 
     <h2>Jobs available</h2><br>
 
-    <iframe src="searchResults.php" frameborder="1" class="posts_frame"></iframe>
+    <?php foreach($posts as $post) : ?>
+
+    <div class="post_container" style="width: 50%;">
+        <h3><?php echo $post['post_title']; ?></h3>
+        <p><?php echo $post['post_desc']; ?></p>
+        <h4>Posted by: <?php echo $post['fname'] . $post['lname']; ?></h4>
+        <button>
+        <a href="ApplicationForm.php?postID=<?php echo htmlspecialchars($post['postID']); ?>" style="text-decoration: none; color: black;">Add an application</a>
+        </button>
+    </div>
+
+    <br>
+
+<?php endforeach; ?>
 
     <form action="core/logout.php" method="POST">
         <button type="submit">Logout</button>

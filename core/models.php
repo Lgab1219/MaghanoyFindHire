@@ -2,11 +2,24 @@
 
 require_once 'dbConfig.php';
 
+// Uploads application to the database and the resume in the file path
+function uploadApplication($pdo, $postID, $accountID, $applicant_message, $resumeFilePath) {
+    $stmt = $pdo->prepare("
+        INSERT INTO applications (postID, accountID, applicant_message, resumeFilePath)
+        VALUES (?, ?, ?, ?)
+    ");
+    
+    $stmt->execute([$postID, $accountID, $applicant_message, $resumeFilePath
+    ]);
+
+    $_SESSION['message'] = "Application submitted successfully!";
+}
+
 // Selects specific post by ID
-function getPostById($pdo, $postID, $fname, $lname) {
-    $query = "SELECT * FROM job_posts WHERE postID = ? AND fname = ? AND lname = ?";
+function getPostById($pdo, $postID) {
+    $query = "SELECT * FROM job_posts WHERE postID = ?";
     $statement = $pdo->prepare($query);
-    $statement->execute([$postID, $fname, $lname]);
+    $statement->execute([$postID]);
     return $statement->fetch();
 }
 
