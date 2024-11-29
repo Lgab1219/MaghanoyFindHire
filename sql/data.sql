@@ -32,14 +32,6 @@ CREATE TABLE accepted_applications (
     lname VARCHAR(255)
 );
 
-CREATE TABLE rejected_applications (
-    applicationID INT AUTO_INCREMENT PRIMARY KEY,
-    postID INT,
-    accountID INT,
-    fname VARCHAR(255),
-    lname VARCHAR(255)
-);
-
 CREATE TABLE hr_messages (
     messageID INT AUTO_INCREMENT PRIMARY KEY,
     accountID INT,
