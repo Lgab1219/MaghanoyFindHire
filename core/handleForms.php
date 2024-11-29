@@ -6,7 +6,7 @@ require_once 'dbConfig.php';
 require_once 'models.php';
 require_once 'validate.php';
 
-
+// Button submits application to database and stores resume locally
 if (isset($_POST['submitApplicationBtn'])) {
     $fileName = $_FILES['resume']['name'];
     $tempFileName = $_FILES['resume']['tmp_name'];
