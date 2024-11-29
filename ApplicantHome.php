@@ -1,8 +1,6 @@
 <?php 
-
 require_once 'core/handleForms.php';
 require_once 'core/models.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -16,26 +14,32 @@ require_once 'core/models.php';
 <body>
 
 <div class="nav_bar">
-        <span class="logo">
-            <h1>FindHire</h1>
-        </span>
+    <span class="logo">
+        <h1>FindHire</h1>
+    </span>
 </div>
 
 <?php
-    if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'applicant') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'applicant') {
     header('Location: HRHome.php');
     exit();
-    }
+}
 
-    if(isset($_SESSION['fname'])) { ?>
-        <div class="account">Hello, Applicant <?php echo $_SESSION['fname']; ?></div>
+if (isset($_SESSION['fname'])) { ?>
+    <div class="account">Hello, Applicant <?php echo htmlspecialchars($_SESSION['fname']); ?></div>
 <?php } else {
     header('Location: login.php');
 }
 
-    $searchResults = isset($_SESSION['searchResults']) ? $_SESSION['searchResults'] : [];
-    $posts = empty($searchResults) ? getAllPosts($pdo) : $searchResults;
+// Fetch accountID based on logged-in user's fname and lname
+$accountID = getAccountID($pdo, $_SESSION['fname'], $_SESSION['lname']);
 
+// Fetch application statuses for the applicant (both accepted and rejected)
+$appStatus = getApplicationStatus($pdo, $accountID);
+
+// Fetch posts, either from session or from the database
+$searchResults = isset($_SESSION['searchResults']) ? $_SESSION['searchResults'] : [];
+$posts = empty($searchResults) ? getAllPosts($pdo) : $searchResults;
 ?>
 
 <br>
@@ -46,9 +50,47 @@ require_once 'core/models.php';
         <input type="submit" value="Search" name="searchJobBtn">
     </form>
 
+    <h2>Your Applications</h2>
+    <ul>
+        <?php if (empty($appStatus)) : ?>
+            <li>No applications yet.</li>
+        <?php else : ?>
+            <?php foreach ($appStatus as $status) : ?>
+                <li>
+                    Job: <?php echo htmlspecialchars($status['post_title']); ?> - 
+                    Status: <strong><?php echo htmlspecialchars($status['status']); ?></strong>
+                </li>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </ul>
+
     <h2>Jobs available</h2><br>
 
-    <iframe src="searchResults.php" frameborder="1" class="posts_frame"></iframe>
+    <?php if (is_array($posts) && !empty($posts)) : ?>
+        <?php foreach ($posts as $post) : 
+            $hasApplied = hasApplicantApplied($pdo, $accountID, $post['postID']);
+        ?>
+
+        <div class="post_container" style="width: 50%;">
+            <h3><?php echo htmlspecialchars($post['post_title']); ?></h3>
+            <p><?php echo htmlspecialchars($post['post_desc']); ?></p>
+            <h4>Posted by: <?php echo htmlspecialchars($post['fname'] . ' ' . $post['lname']); ?></h4>
+
+            <?php if (!$hasApplied) : ?>
+                <button>
+                    <a href="ApplicationForm.php?postID=<?php echo htmlspecialchars($post['postID']); ?>" style="text-decoration: none; color: black;">Submit an application</a>
+                </button>
+            <?php else : ?>
+                <p><em>You have already applied for this job.</em></p>
+            <?php endif; ?>
+        </div>
+
+        <br>
+
+        <?php endforeach; ?>
+    <?php else : ?>
+        <p>No job posts available.</p>
+    <?php endif; ?>
 
     <form action="core/logout.php" method="POST">
         <button type="submit">Logout</button>

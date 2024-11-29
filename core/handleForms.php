@@ -6,6 +6,62 @@ require_once 'dbConfig.php';
 require_once 'models.php';
 require_once 'validate.php';
 
+// Button submits application to database and stores resume locally
+if (isset($_POST['submitApplicationBtn'])) {
+    $fileName = $_FILES['resume']['name'];
+    $tempFileName = $_FILES['resume']['tmp_name'];
+    $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+    $uniqueID = sha1(md5(rand(1, 9999999)));
+    $completeFileName = $uniqueID . "." . $fileExtension;
+    $filePath = "../resumePath/" . $completeFileName;
+
+    // Validate file type and size
+    $allowedExtensions = ['pdf'];
+    $maxFileSize = 2 * 1024 * 1024; // 2MB
+
+    // Check if the file uploaded is PDF or not
+    if (!in_array($fileExtension, $allowedExtensions)) {
+        $_SESSION['message'] = "Invalid file type. Only PDF files are allowed.";
+        header('Location: ../ApplicationForm.php?postID=' . $_POST['postID']);
+        exit();
+    }
+
+    // Check if file size is too large
+    if ($_FILES['resume']['size'] > $maxFileSize) {
+        $_SESSION['message'] = "File is too large. Maximum allowed size is 2MB.";
+        header('Location: ../ApplicationForm.php?postID=' . $_POST['postID']);
+        exit();
+    }
+
+    if (move_uploaded_file($tempFileName, $filePath)) {
+        $_SESSION['message'] = "File uploaded successfully!";
+        
+        // Retrieve accountID from the database
+        $stmt = $pdo->prepare("SELECT accountID FROM accounts WHERE fname = :fname AND role = 'applicant'");
+        $stmt->execute([':fname' => $_SESSION['fname']]);
+        $account = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($account) {
+            $postID = $_POST['postID'];
+            $accountID = $account['accountID'];
+            $applicant_message = trim($_POST['applicant_message']);
+
+            uploadApplication($pdo, $postID, $accountID, $applicant_message, $completeFileName);
+
+            header('Location: ../ApplicantHome.php');
+            exit();
+        } else {
+            $_SESSION['message'] = "Unable to retrieve your account information.";
+            header('Location: ../ApplicationForm.php?postID=' . $_POST['postID']);
+            exit();
+        }
+    } else {
+        $_SESSION['message'] = "File upload failed.";
+        header('Location: ../ApplicationForm.php?postID=' . $_POST['postID']);
+        exit();
+    }
+}
+
 // Deletes job post by ID
 if (isset($_POST['deletePostBtn'])) {
     $postID = sanitizeInput($_POST['postID']);

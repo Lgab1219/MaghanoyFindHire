@@ -32,6 +32,9 @@ require_once 'core/models.php';
     <button>
     <a href="deletePost.php?postID=<?php echo htmlspecialchars($post['postID']); ?>" style="text-decoration: none; color: black;">Delete</a>
     </button>
+    <button>
+    <a href="checkApplications.php?postID=<?php echo htmlspecialchars($post['postID']); ?>" style="text-decoration: none; color: black;" target="_top">Check Applications</a>
+    </button>
 </div>
 
 <br>

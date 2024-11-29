@@ -20,21 +20,11 @@ CREATE TABLE applications (
     applicationID INT AUTO_INCREMENT PRIMARY KEY,
     postID INT,
     accountID INT,
-    fname VARCHAR(255),
-    lname VARCHAR(255),
     applicant_message VARCHAR(255),
-    resumeFile VARCHAR(255)
+    resumeFilePath VARCHAR(255)
 );
 
 CREATE TABLE accepted_applications (
-    applicationID INT AUTO_INCREMENT PRIMARY KEY,
-    postID INT,
-    accountID INT,
-    fname VARCHAR(255),
-    lname VARCHAR(255)
-);
-
-CREATE TABLE rejected_applications (
     applicationID INT AUTO_INCREMENT PRIMARY KEY,
     postID INT,
     accountID INT,
