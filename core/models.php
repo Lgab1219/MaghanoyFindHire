@@ -2,6 +2,86 @@
 
 require_once 'dbConfig.php';
 
+// Checks whether an applicant's submitted application is accepted or rejected
+function getApplicationStatus($pdo, $accountID) {
+    $acceptedQuery = "
+        SELECT aa.postID, jp.post_title, 'Accepted' AS status 
+        FROM accepted_applications aa 
+        JOIN job_posts jp ON aa.postID = jp.postID 
+        WHERE aa.accountID = :accountID
+    ";
+    
+    $stmt = $pdo->prepare($acceptedQuery);
+    $stmt->execute(['accountID' => $accountID]);
+    return $stmt->fetchAll();
+}
+
+
+// When HR accepts application, a query gets sent to the accepted applications table
+function acceptApplication($pdo, $applicationID) {
+    $query = "
+        INSERT INTO accepted_applications (postID, accountID, fname, lname)
+        SELECT a.postID, a.accountID, ac.fname, ac.lname
+        FROM applications a
+        JOIN accounts ac ON a.accountID = ac.accountID
+        WHERE a.applicationID = :applicationID
+    ";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(['applicationID' => $applicationID]);
+
+    // Remove the application from the applications table
+    $deleteQuery = "DELETE FROM applications WHERE applicationID = :applicationID";
+    $deleteStmt = $pdo->prepare($deleteQuery);
+    $deleteStmt->execute(['applicationID' => $applicationID]);
+}
+
+
+// When HR rejects application, a query deletes the submitted application
+function rejectApplication($pdo, $applicationID) {
+    $deleteQuery = "DELETE FROM applications WHERE applicationID = :applicationID";
+    $stmt = $pdo->prepare($deleteQuery);
+    $stmt->execute(['applicationID' => $applicationID]);
+}
+
+
+
+// Check if an applicant has submitted an application in a specific job post
+function hasApplicantApplied($pdo, $accountID, $postID) {
+    $query = "SELECT COUNT(*) FROM applications WHERE accountID = :accountID AND postID = :postID";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(['accountID' => $accountID, 'postID' => $postID]);
+    return $stmt->fetchColumn() > 0;
+}
+
+
+// Get applications by id
+function getApplicationsByPostID($pdo, $postID) {
+    $stmt = $pdo->prepare("
+        SELECT a.*, acc.fname, acc.lname 
+        FROM applications a
+        JOIN accounts acc ON a.accountID = acc.accountID
+        WHERE a.postID = :postID
+    ");
+    $stmt->execute(['postID' => $postID]);
+    return $stmt->fetchAll();
+}
+
+
+
+// Get all applications
+function getAllApplications($pdo) {
+    $stmt = $pdo->prepare("
+        SELECT a.applicationID, a.applicant_message, a.resumeFilePath, ac.fname, ac.lname, jp.post_title 
+        FROM applications a
+        INNER JOIN accounts ac ON a.accountID = ac.accountID
+        INNER JOIN job_posts jp ON a.postID = jp.postID
+        ORDER BY a.applicationID DESC
+    ");
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+
 // Uploads application to the database and the resume in the file path
 function uploadApplication($pdo, $postID, $accountID, $applicant_message, $resumeFilePath) {
     $stmt = $pdo->prepare("
@@ -113,6 +193,15 @@ function createPost($pdo, $post_title, $post_desc, $fname, $lname){
         return false;
     }
 }
+
+// Get account by ID
+function getAccountID($pdo, $fname, $lname) {
+    $query = "SELECT accountID FROM accounts WHERE fname = :fname AND lname = :lname LIMIT 1";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute(['fname' => $fname, 'lname' => $lname]);
+    return $stmt->fetchColumn();
+}
+
 
 // Logins account
 function loginAccount($pdo, $email, $password) {
