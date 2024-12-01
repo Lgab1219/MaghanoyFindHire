@@ -2,6 +2,8 @@
 
 require_once 'dbConfig.php';
 
+
+
 // Checks whether an applicant's submitted application is accepted or rejected
 function getApplicationStatus($pdo, $accountID) {
     $acceptedQuery = "

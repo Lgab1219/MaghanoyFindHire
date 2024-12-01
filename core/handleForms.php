@@ -6,6 +6,8 @@ require_once 'dbConfig.php';
 require_once 'models.php';
 require_once 'validate.php';
 
+
+
 // Button submits application to database and stores resume locally
 if (isset($_POST['submitApplicationBtn'])) {
     $fileName = $_FILES['resume']['name'];
@@ -167,6 +169,7 @@ if (isset($_POST['loginUserBtn'])) {
             $_SESSION['fname'] = $fnameDB;
             $_SESSION['lname'] = $lnameDB;
             $_SESSION['role'] = $roleDB;
+            $_SESSION['accountID'] = $loginQuery['accountID'];
         
             if ($roleDB == "hr") {
                 header("Location: ../HRHome.php");
