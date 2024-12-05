@@ -73,10 +73,16 @@ $posts = empty($searchResults) ? getAllPosts($pdo) : $searchResults;
             <?php if ($hasApplied && $postStatus == "Pending") : ?>
                 <p><em>You have already applied for this job.</em></p>
                 <p>Status: <strong><?php echo htmlspecialchars($postStatus); ?></strong></p>
+                <button>
+                    <a href="Messenger.php?postID=<?php echo $post['postID']; ?>" style="text-decoration: none; color: black;">Message HR</a>
+                </button>
 
             <?php elseif (!$hasApplied && $postStatus == "Accepted") : ?>
                 <p><em>You have already applied for this job.</em></p>
                 <p>Status: <strong><?php echo htmlspecialchars($postStatus); ?></strong></p>
+                <button>
+                    <a href="Messenger.php?postID=<?php echo $post['postID']; ?>" style="text-decoration: none; color: black;">Message HR</a>
+                </button>
 
             <?php else : ?>
                 <button>

@@ -8,6 +8,29 @@ require_once 'validate.php';
 
 
 
+// Sends message in the message table
+if (isset($_POST['sendMessage'])) {
+    $postID = $_POST['postID'];
+    $senderID = $_SESSION['accountID'];
+    $senderFname = $_SESSION['fname'];
+    $senderLname = $_SESSION['lname'];
+
+    // Get receiver information from the postID
+    $post = getPostById($pdo, $postID);
+    $receiverFname = $post['fname'];
+    $receiverLname = $post['lname'];
+    $receiverID = $post['accountID']; // You might need to store the receiverID in the database
+
+    $message = $_POST['message'];
+
+    // Send the message
+    sendMessage($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname, $message);
+
+    // Redirect back to the Messenger page or display a success message
+    header("Location: ../Messenger.php?accountID=$senderID&postID=$postID");
+    exit();
+}
+
 // Button submits application to database and stores resume locally
 if (isset($_POST['submitApplicationBtn'])) {
     $fileName = $_FILES['resume']['name'];
