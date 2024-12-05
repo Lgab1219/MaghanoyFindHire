@@ -34,10 +34,10 @@ CREATE TABLE accepted_applications (
 
 CREATE TABLE messages (
     messageID INT AUTO_INCREMENT PRIMARY KEY,
-    accountID INT NOT NULL,
-    role VARCHAR(255) NOT NULL,
-    fname VARCHAR(255) NOT NULL,
-    lname VARCHAR(255) NOT NULL,
+    senderFname VARCHAR(255) NOT NULL,
+    senderLname VARCHAR(255) NOT NULL,
+    receiverFname VARCHAR(255) NOT NULL,
+    receiverLname VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
