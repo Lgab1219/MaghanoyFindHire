@@ -2,6 +2,36 @@
 
 require_once 'dbConfig.php';
 
+
+
+// Get all messages in descending order, showing the latest message
+function getAllMessages($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname) {
+    $query = "SELECT * FROM messages WHERE (senderFname = ? AND senderLname = ?) OR (receiverFname = ? AND receiverLname = ?) ORDER BY timestamp DESC";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$senderFname, $senderLname, $receiverFname, $receiverLname]);
+    return $stmt->fetchAll();
+}
+
+
+// Send message from applicant side
+function sendMessage($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname, $message) {
+    $query = "INSERT INTO messages (senderFname, senderLname, receiverFname, receiverLname, message) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$senderFname, $senderLname, $receiverFname, $receiverLname, $message]);
+}
+
+// Gets all accepted applications to be able to show them
+function getAcceptedApplicationsByPostID($pdo, $postID) {
+    $query = "SELECT a.*, u.fname, u.lname 
+              FROM accepted_applications a
+              JOIN accounts u ON a.accountID = u.accountID
+              WHERE a.postID = ?";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$postID]);
+    return $stmt->fetchAll();
+}
+
+
 // Checks whether an applicant's submitted application is accepted or rejected
 function getApplicationStatus($pdo, $accountID) {
     $acceptedQuery = "
@@ -19,20 +49,17 @@ function getApplicationStatus($pdo, $accountID) {
 
 // When HR accepts application, a query gets sent to the accepted applications table
 function acceptApplication($pdo, $applicationID) {
-    $query = "
-        INSERT INTO accepted_applications (postID, accountID, fname, lname)
-        SELECT a.postID, a.accountID, ac.fname, ac.lname
-        FROM applications a
-        JOIN accounts ac ON a.accountID = ac.accountID
-        WHERE a.applicationID = :applicationID
-    ";
+    $query = "INSERT INTO accepted_applications (postID, accountID)
+              SELECT postID, accountID 
+              FROM applications 
+              WHERE applicationID = ?";
     $stmt = $pdo->prepare($query);
-    $stmt->execute(['applicationID' => $applicationID]);
+    $stmt->execute([$applicationID]);
 
     // Remove the application from the applications table
-    $deleteQuery = "DELETE FROM applications WHERE applicationID = :applicationID";
+    $deleteQuery = "DELETE FROM applications WHERE applicationID = ?";
     $deleteStmt = $pdo->prepare($deleteQuery);
-    $deleteStmt->execute(['applicationID' => $applicationID]);
+    $deleteStmt->execute([$applicationID]);
 }
 
 

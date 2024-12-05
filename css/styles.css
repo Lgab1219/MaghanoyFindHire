@@ -7,3 +7,9 @@
     width: 55%;
     height: 30em;
 }
+
+.accepted_applicant {
+    border: 2px solid black;
+    width: 50%;
+    padding: 1em;
+}

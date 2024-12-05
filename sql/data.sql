@@ -32,14 +32,12 @@ CREATE TABLE accepted_applications (
     lname VARCHAR(255)
 );
 
-CREATE TABLE hr_messages (
+CREATE TABLE messages (
     messageID INT AUTO_INCREMENT PRIMARY KEY,
-    accountID INT,
-    message VARCHAR(255)
-);
-
-CREATE TABLE applicant_messages (
-    messageID INT AUTO_INCREMENT PRIMARY KEY,
-    accountID INT,
-    message VARCHAR(255)
+    senderFname VARCHAR(255) NOT NULL,
+    senderLname VARCHAR(255) NOT NULL,
+    receiverFname VARCHAR(255) NOT NULL,
+    receiverLname VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
