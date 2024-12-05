@@ -58,6 +58,10 @@ require_once 'core/models.php';
         header("Location: checkApplications.php?postID=" . htmlspecialchars($postID));
         exit();
     }
+
+    // Fetch all accepted applications
+    $acceptedApplications = getAcceptedApplicationsByPostID($pdo, $postID);
+
 ?>
 
 <br>
@@ -82,6 +86,19 @@ require_once 'core/models.php';
             <br>
         <?php endforeach; ?>
     <?php endif; ?>
+
+    <br><br>
+
+    <h2>Accepted Applications:</h2>
+        <?php if (!empty($acceptedApplications)) : ?>
+            <?php foreach ($acceptedApplications as $application) : ?>
+                <div class="accepted_applicant">
+                <p><strong>Applicant:</strong> <?php echo htmlspecialchars($application['fname'] . ' ' . $application['lname']); ?></p>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+    <br>
 
     <button>
         <a href="HRHome.php" style="text-decoration: none; color: black;">Return</a>
