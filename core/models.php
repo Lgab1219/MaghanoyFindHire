@@ -4,21 +4,25 @@ require_once 'dbConfig.php';
 
 
 
-// Get all messages in descending order, showing the latest message
-function getAllMessages($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname) {
-    $query = "SELECT * FROM messages WHERE (senderFname = ? AND senderLname = ?) OR (receiverFname = ? AND receiverLname = ?) ORDER BY timestamp DESC";
+// Get all messages in descending order, showing the latest message for the specific postID
+function getAllMessages($pdo, $postID, $senderFname, $senderLname, $receiverFname, $receiverLname) {
+    $query = "SELECT * FROM messages 
+              WHERE ((senderFname = ? AND senderLname = ?) 
+              OR (receiverFname = ? AND receiverLname = ?)) 
+              AND postID = ? 
+              ORDER BY timestamp DESC";
     $stmt = $pdo->prepare($query);
-    $stmt->execute([$senderFname, $senderLname, $receiverFname, $receiverLname]);
+    $stmt->execute([$senderFname, $senderLname, $receiverFname, $receiverLname, $postID]);
     return $stmt->fetchAll();
 }
 
-
 // Send message from applicant side
-function sendMessage($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname, $message) {
-    $query = "INSERT INTO messages (senderFname, senderLname, receiverFname, receiverLname, message) VALUES (?, ?, ?, ?, ?)";
+function sendMessage($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname, $message, $postID) {
+    $query = "INSERT INTO messages (senderFname, senderLname, receiverFname, receiverLname, message, postID) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($query);
-    $stmt->execute([$senderFname, $senderLname, $receiverFname, $receiverLname, $message]);
+    $stmt->execute([$senderFname, $senderLname, $receiverFname, $receiverLname, $message, $postID]);
 }
+
 
 // Gets all accepted applications to be able to show them
 function getAcceptedApplicationsByPostID($pdo, $postID) {
@@ -49,10 +53,10 @@ function getApplicationStatus($pdo, $accountID) {
 
 // When HR accepts application, a query gets sent to the accepted applications table
 function acceptApplication($pdo, $applicationID) {
-    $query = "INSERT INTO accepted_applications (postID, accountID)
-              SELECT postID, accountID 
-              FROM applications 
-              WHERE applicationID = ?";
+    $query = "INSERT INTO accepted_applications (postID, accountID, fname, lname)
+              SELECT a.postID, a.accountID, a.fname, a.lname
+              FROM applications a
+              WHERE a.applicationID = ?";
     $stmt = $pdo->prepare($query);
     $stmt->execute([$applicationID]);
 
@@ -110,14 +114,13 @@ function getAllApplications($pdo) {
 
 
 // Uploads application to the database and the resume in the file path
-function uploadApplication($pdo, $postID, $accountID, $applicant_message, $resumeFilePath) {
+function uploadApplication($pdo, $postID, $accountID, $fname, $lname, $applicant_message, $resumeFilePath) {
     $stmt = $pdo->prepare("
-        INSERT INTO applications (postID, accountID, applicant_message, resumeFilePath)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO applications (postID, accountID, fname, lname, applicant_message, resumeFilePath)
+        VALUES (?, ?, ?, ?, ?, ?)
     ");
-    
-    $stmt->execute([$postID, $accountID, $applicant_message, $resumeFilePath
-    ]);
+
+    $stmt->execute([$postID, $accountID, $fname, $lname, $applicant_message, $resumeFilePath]);
 
     $_SESSION['message'] = "Application submitted successfully!";
 }
