@@ -20,6 +20,8 @@ CREATE TABLE applications (
     applicationID INT AUTO_INCREMENT PRIMARY KEY,
     postID INT,
     accountID INT,
+    fname VARCHAR(255),
+    lname VARCHAR(255),
     applicant_message VARCHAR(255),
     resumeFilePath VARCHAR(255)
 );
@@ -34,10 +36,13 @@ CREATE TABLE accepted_applications (
 
 CREATE TABLE messages (
     messageID INT AUTO_INCREMENT PRIMARY KEY,
-    senderFname VARCHAR(255) NOT NULL,
-    senderLname VARCHAR(255) NOT NULL,
-    receiverFname VARCHAR(255) NOT NULL,
-    receiverLname VARCHAR(255) NOT NULL,
+    postID INT NOT NULL,
+    senderFname VARCHAR(50) NOT NULL,
+    senderLname VARCHAR(50) NOT NULL,
+    receiverFname VARCHAR(50) NOT NULL,
+    receiverLname VARCHAR(50) NOT NULL,
     message TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (postID) REFERENCES job_posts(postID) ON DELETE CASCADE
 );
+
