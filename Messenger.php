@@ -5,13 +5,18 @@ require_once 'core/handleForms.php';
 require_once 'core/models.php';
 
 // Fetch postID based on the specific post
-$postID = $_GET['postID'];
+$postID = isset($_GET['postID']) ? $_GET['postID'] : null;
+
+if (!$postID) {
+    die("Error: postID not provided.");
+}
+
 
 // Get receiver's fname and lname through the post
 $post = getPostById($pdo, $postID);
 
 // Fetch all messages for the current user
-$messages = getAllMessages($pdo, $_SESSION['fname'], $_SESSION['lname'], $post['fname'], $post['lname']);
+$messages = getAllMessages($pdo, $postID, $_SESSION['fname'], $_SESSION['lname'], $post['fname'], $post['lname']);
 
 ?>
 
