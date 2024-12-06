@@ -1,0 +1,15 @@
+.post_container {
+    border: 2px solid black;
+    padding: 1em;
+}
+
+.posts_frame {
+    width: 55%;
+    height: 30em;
+}
+
+.accepted_applicant {
+    border: 2px solid black;
+    width: 50%;
+    padding: 1em;
+}
