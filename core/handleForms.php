@@ -11,25 +11,35 @@ require_once 'validate.php';
 // Sends message in the message table
 if (isset($_POST['sendMessage'])) {
     $postID = $_POST['postID'];
-    $senderID = $_SESSION['accountID'];
+    $accountID = $_POST['accountID']; // Add accountID to track sender
     $senderFname = $_SESSION['fname'];
     $senderLname = $_SESSION['lname'];
+    $currentRole = $_SESSION['role']; // Get the current user's role
 
-    // Get receiver information from the postID
-    $post = getPostById($pdo, $postID);
-    $receiverFname = $post['fname'];
-    $receiverLname = $post['lname'];
-    $receiverID = $_SESSION['accountID']; // You might need to store the receiverID in the database
+    // Dynamically determine the receiver's details
+    if ($currentRole === 'hr') {
+        // HR is sending a message, the receiver is the applicant
+        $receiverDetails = getApplicantDetailsByAccountID($pdo, $accountID);
+        $receiverFname = $receiverDetails['fname'];
+        $receiverLname = $receiverDetails['lname'];
+    } else {
+        // Applicant is sending a message, the receiver is the HR
+        $post = getPostById($pdo, $postID);
+        $receiverFname = $post['fname'];
+        $receiverLname = $post['lname'];
+    }
 
     $message = $_POST['message'];
 
     // Send the message
-    sendMessage($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname, $message, $postID);
+    sendMessage($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname, $message, $postID, $accountID);
 
-    // Redirect back to the Messenger page or display a success message
-    header("Location: ../Messenger.php?accountID=$senderID&postID=$postID");
+    // Redirect back to the Messenger page
+    header("Location: ../Messenger.php?accountID=$accountID&postID=$postID");
     exit();
 }
+
+
 
 // Button submits application to database and stores resume locally
 if (isset($_POST['submitApplicationBtn'])) {

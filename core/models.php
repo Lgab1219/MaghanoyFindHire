@@ -3,25 +3,35 @@
 require_once 'dbConfig.php';
 
 
+// Get receiver's information if current role is HR
+function getApplicantDetailsByAccountID($pdo, $accountID) {
+    $query = "SELECT fname, lname FROM accounts WHERE accountID = ?";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$accountID]);
+    return $stmt->fetch();
+}
 
-// Get all messages in descending order, showing the latest message for the specific postID
-function getAllMessages($pdo, $postID, $senderFname, $senderLname, $receiverFname, $receiverLname) {
+// Get all messages in descending order for the specific postID and accountID
+function getAllMessages($pdo, $postID, $accountID, $currentFname, $currentLname) {
     $query = "SELECT * FROM messages 
-              WHERE ((senderFname = ? AND senderLname = ?) 
-              OR (receiverFname = ? AND receiverLname = ?)) 
-              AND postID = ? 
+              WHERE postID = ? AND accountID = ?
+              AND ((senderFname = ? AND senderLname = ?) 
+              OR (receiverFname = ? AND receiverLname = ?))
               ORDER BY timestamp DESC";
     $stmt = $pdo->prepare($query);
-    $stmt->execute([$senderFname, $senderLname, $receiverFname, $receiverLname, $postID]);
+    $stmt->execute([$postID, $accountID, $currentFname, $currentLname, $currentFname, $currentLname]);
     return $stmt->fetchAll();
 }
 
+
 // Send message from applicant side
-function sendMessage($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname, $message, $postID) {
-    $query = "INSERT INTO messages (senderFname, senderLname, receiverFname, receiverLname, message, postID) VALUES (?, ?, ?, ?, ?, ?)";
+function sendMessage($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname, $message, $postID, $accountID) {
+    $query = "INSERT INTO messages (senderFname, senderLname, receiverFname, receiverLname, message, postID, accountID) 
+              VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($query);
-    $stmt->execute([$senderFname, $senderLname, $receiverFname, $receiverLname, $message, $postID]);
+    $stmt->execute([$senderFname, $senderLname, $receiverFname, $receiverLname, $message, $postID, $accountID]);
 }
+
 
 
 // Gets all accepted applications to be able to show them

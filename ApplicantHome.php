@@ -74,14 +74,14 @@ $posts = empty($searchResults) ? getAllPosts($pdo) : $searchResults;
                 <p><em>You have already applied for this job.</em></p>
                 <p>Status: <strong><?php echo htmlspecialchars($postStatus); ?></strong></p>
                 <button>
-                    <a href="Messenger.php?postID=<?php echo $post['postID']; ?>" style="text-decoration: none; color: black;">Message HR</a>
+                    <a href="Messenger.php?accountID=<?php echo $accountID; ?>&postID=<?php echo $post['postID']; ?>" style="text-decoration: none; color: black;">Message HR</a>
                 </button>
 
             <?php elseif (!$hasApplied && $postStatus == "Accepted") : ?>
                 <p><em>You have already applied for this job.</em></p>
                 <p>Status: <strong><?php echo htmlspecialchars($postStatus); ?></strong></p>
                 <button>
-                    <a href="Messenger.php?postID=<?php echo $post['postID']; ?>" style="text-decoration: none; color: black;">Message HR</a>
+                    <a href="Messenger.php?accountID=<?php echo $accountID; ?>&postID=<?php echo $post['postID']; ?>" style="text-decoration: none; color: black;">Message HR</a>
                 </button>
 
             <?php else : ?>

@@ -88,7 +88,7 @@ require_once 'core/models.php';
           <button type="submit" name="action" value="accept" style="color: green;">Accept</button>
           <button type="submit" name="action" value="reject" style="color: red;">Reject</button>
           <button>
-          <a href="Messenger.php?postID=<?php echo $postID; ?>" style="text-decoration: none; color: black;">Message Applicant</a>
+          <a href="Messenger.php?accountID=<?php echo htmlspecialchars($application['accountID']); ?>&postID=<?php echo $postID; ?>" style="text-decoration: none; color: black;">Message Applicant</a>
           </button>
         </form>
       </div>
@@ -107,7 +107,7 @@ require_once 'core/models.php';
     <div class="accepted_applicant">
         <p><strong>Applicant:</strong> <?php echo htmlspecialchars($application['fname'] . ' ' . $application['lname']); ?></p>
     <button>
-        <a href="Messenger.php?postID=<?php echo $postID; ?>" style="text-decoration: none; color: black;">Message Applicant</a>
+        <a href="Messenger.php?accountID=<?php echo htmlspecialchars($application['accountID']); ?>&postID=<?php echo $postID; ?>" style="text-decoration: none; color: black;">Message Applicant</a>
     </button>
     </div>
  <?php endforeach; ?>

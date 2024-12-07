@@ -4,19 +4,16 @@ require_once 'core/dbConfig.php';
 require_once 'core/handleForms.php';
 require_once 'core/models.php';
 
-// Fetch postID based on the specific post
-$postID = isset($_GET['postID']) ? $_GET['postID'] : null;
-
-if (!$postID) {
-    die("Error: postID not provided.");
-}
-
+// Fetch messages for the current logged-in user
+$postID = $_GET['postID'];
+$accountID = $_GET['accountID']; // AccountID of selected applicant
+$currentFname = $_SESSION['fname'];
+$currentLname = $_SESSION['lname'];
 
 // Get receiver's fname and lname through the post
 $post = getPostById($pdo, $postID);
 
-// Fetch all messages for the current user
-$messages = getAllMessages($pdo, $postID, $_SESSION['fname'], $_SESSION['lname'], $post['fname'], $post['lname']);
+$messages = getAllMessages($pdo, $postID, $accountID, $currentFname, $currentLname);
 
 ?>
 
@@ -49,6 +46,7 @@ $messages = getAllMessages($pdo, $postID, $_SESSION['fname'], $_SESSION['lname']
 <br>
 
 <form method="POST" action="core/handleForms.php">
+        <input type="hidden" name="accountID" value="<?php echo $accountID; ?>">
         <input type="hidden" name="postID" value="<?php echo $postID; ?>">
         <textarea name="message" placeholder="Type your message here..." cols="60" rows="5"></textarea>
         <button type="submit" name="sendMessage">Send</button>
@@ -57,7 +55,7 @@ $messages = getAllMessages($pdo, $postID, $_SESSION['fname'], $_SESSION['lname']
 <br>
 
 <button>
-    <a href="ApplicantHome.php" style="text-decoration: none; color: black;">Return</a>
+    <a href="checkApplications.php?postID=<?php echo htmlspecialchars($postID); ?>" style="text-decoration: none; color: black;">Return</a>
 </button>
 
 </body>
