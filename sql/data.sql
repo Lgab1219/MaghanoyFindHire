@@ -37,6 +37,7 @@ CREATE TABLE accepted_applications (
 CREATE TABLE messages (
     messageID INT AUTO_INCREMENT PRIMARY KEY,
     postID INT NOT NULL,
+    accountID INT NOT NULL,
     senderFname VARCHAR(50) NOT NULL,
     senderLname VARCHAR(50) NOT NULL,
     receiverFname VARCHAR(50) NOT NULL,
@@ -45,4 +46,3 @@ CREATE TABLE messages (
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (postID) REFERENCES job_posts(postID) ON DELETE CASCADE
 );
-
