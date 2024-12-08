@@ -15,6 +15,13 @@ require_once 'core/models.php';
 </head>
 <body>
 
+<style>
+body {
+    background: #ffffff; /* Override any inherited styles */
+    margin: 0;
+}
+</style>
+
 <?php
 
     $searchUserResults = isset($_SESSION['searchUserResults']) ? $_SESSION['searchUserResults'] : [];
@@ -28,7 +35,7 @@ require_once 'core/models.php';
 <div class="post_container">
     <h3><?php echo $post['post_title']; ?></h3>
     <p><?php echo $post['post_desc']; ?></p>
-    <h4>Posted by: <?php echo $post['fname'] . $post['lname']; ?></h4>
+    <h4>Posted by: <?php echo $post['fname'] . " " . $post['lname']; ?></h4>
     <button>
     <a href="deletePost.php?postID=<?php echo htmlspecialchars($post['postID']); ?>" style="text-decoration: none; color: black;">Delete</a>
     </button>
