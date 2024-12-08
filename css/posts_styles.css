@@ -1,0 +1,11 @@
+
+.post_container {
+    border: 2px solid black;
+    padding: 1em;
+}
+
+.posts_frame {
+    width: 55%;
+    height: 30em;
+    background: #ffffff !important;
+}

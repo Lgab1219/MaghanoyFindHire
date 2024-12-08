@@ -1,3 +1,128 @@
+.searchResults {
+    width: 60%;
+    border: 1px solid #E55F00;
+    padding: 1em;
+    background-color: #ffffff;
+}
+
+.applicant_main {
+    margin: -180px 0 0 0;
+    padding: 0 0 0 3em;
+}
+
+#applicant_post_container {
+    border: 2px solid black;
+    padding: 1em;
+}
+
+#applicant_account {
+    width: 250px;
+    height: 150px;
+    margin: 0 4em 0 -4em;
+    background-color: #E55F00;
+    padding: 2em;
+    border-radius: 15px;
+}
+
+#applicant_account_container {
+    display: inline-block;
+    margin: 100px 0 0 75%;
+}
+
+
+.searchJobUserInput {
+    width: 50%;
+    margin: 15px 0 0 0;
+    padding: 10px 10px 10px 10px;
+    border: 1px solid #E55F00;
+}
+
+#createPostButton {
+    display: inline-block; /* Make it behave like a block-level element */
+    font-size: 1em;
+    width: 15%;
+    height: 2.5em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #ff822f;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    color: #ffffff;
+    text-align: center; /* Center the text inside the button */
+    line-height: 2.3em; /* Vertically center the text inside the button */
+}
+
+#createPostButton:hover {
+    background-color: #FF6700;  /* Darker shade for register */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px #E55F00;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+}
+
+.searchJobUserButton {
+    width: 15%;
+    height: 3em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color:#003B75;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+}
+
+.searchJobUserButton:hover {
+    background-color: #003B75;  /* Darker shade for register */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 78, 152, 0.5);
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+}
+
+
+.home_main {
+    display: flex;
+    justify-content: space-around;
+    margin: 50px 0 0 0;
+}
+
+.searchUserCreatedResults_form {
+    display: inline-block;
+    width: 100%;
+    padding: 0 0 0 2em;
+}
+
+.searchJobs {
+    margin: 5em 0 50px 0;
+    width: 90%;
+    padding: 0 0 0 2em;
+}
+
+.account_container {
+    display: inline-block;
+}
+
+.account {
+    width: 250px;
+    height: 150px;
+    margin: 0 4em 0 -4em;
+    background-color: #E55F00;
+    padding: 2em;
+    border-radius: 15px;
+}
+
+.post_container {
+    border: 2px solid black;
+    padding: 1em;
+}
+
+.posts_frame {
+    width: 50%;
+    height: 30em;
+    border: 1px solid #FF6700;
+}
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -90,6 +215,23 @@ body {
     border-radius: 5px;
 }
 
+.logout_button {
+    background-color:#ffffff;
+    color: #333138;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    padding: 1em 4em 1em 4em;
+    cursor: pointer;
+}
+
+.logout_button:hover {
+    background-color: #ff822f;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px #ffffff;
+}
+
 #register_button {
     background-color:#003B75;
     color: #ffffff;
@@ -124,16 +266,6 @@ body {
 .reg_form_content {
     display: inline-block;
     margin: 0 0 0 0;
-}
-
-.post_container {
-    border: 2px solid black;
-    padding: 1em;
-}
-
-.posts_frame {
-    width: 55%;
-    height: 30em;
 }
 
 .accepted_applicant {
