@@ -15,6 +15,14 @@ require_once 'core/models.php';
 </head>
 <body>
 
+<style>
+body {
+    background: #ffffff; /* Override any inherited styles */
+    margin: 0;
+}
+</style>
+
+
 <?php
 
     $searchResults = isset($_SESSION['searchResults']) ? $_SESSION['searchResults'] : [];
