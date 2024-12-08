@@ -28,15 +28,10 @@ require_once 'core/handleForms.php';
 
     
     <div class="main">
-        
-        <?php
-        if (isset($_SESSION['message'])) { ?>
-            <div class="message"><?php echo $_SESSION['message']; ?></div>
-        <?php unset($_SESSION['message']); } ?>
 
         <div class="reg_form_content">
             <span>
-                <h1 style="color: #004E98;">Your Next Career,<br><h1 style="color: #FF6700;">Simplified.</h1></h1><br>
+                <h1 style="color: #004E98;">Your Next Career,<br><h1 style="color: #FF6700; margin-top: -15px;">Simplified.</h1></h1><br>
                 <h2 style="color: #004E98;">Lightning-Fast Performance: </h2><p >Experience blazing-fast load times and seamless navigation.</p>
                 <h2 style="color: #004E98;">Intuitive Interface: </h2><p>A user-friendly design that makes your job search a breeze.</p>
                 <h2 style="color: #004E98;">Secure and Private: </h2><p>Protect your personal information with our robust security measures.</p>
@@ -44,6 +39,12 @@ require_once 'core/handleForms.php';
         </div>
 
         <div class="register_form_container">
+
+            <?php if(isset($_SESSION['message'])) : ?>
+                <p style="color: red; margin: -1em 0 0 0; text-align: center;"><?php echo $_SESSION['message']; ?></p>
+                <?php unset($_SESSION['message']); ?>
+            <?php endif; ?>
+
             <h2 id="register-text">Register</h2>
             <form action="core/handleForms.php" method="POST">
                 <label for="fname" class="register_fname">First Name</label>
