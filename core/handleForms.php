@@ -8,8 +8,44 @@ require_once 'validate.php';
 
 
 
+// Sends message in the message table
+if (isset($_POST['sendMessage'])) {
+    $postID = $_POST['postID'];
+    $accountID = $_POST['accountID']; // Add accountID to track sender
+    $senderFname = $_SESSION['fname'];
+    $senderLname = $_SESSION['lname'];
+    $currentRole = $_SESSION['role']; // Get the current user's role
+
+    // Dynamically determine the receiver's details
+    if ($currentRole === 'hr') {
+        // HR is sending a message, the receiver is the applicant
+        $receiverDetails = getApplicantDetailsByAccountID($pdo, $accountID);
+        $receiverFname = $receiverDetails['fname'];
+        $receiverLname = $receiverDetails['lname'];
+    } else {
+        // Applicant is sending a message, the receiver is the HR
+        $post = getPostById($pdo, $postID);
+        $receiverFname = $post['fname'];
+        $receiverLname = $post['lname'];
+    }
+
+    $message = $_POST['message'];
+
+    // Send the message
+    sendMessage($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname, $message, $postID, $accountID);
+
+    // Redirect back to the Messenger page
+    header("Location: ../Messenger.php?accountID=$accountID&postID=$postID");
+    exit();
+}
+
+
+
 // Button submits application to database and stores resume locally
 if (isset($_POST['submitApplicationBtn'])) {
+    $fname = $_SESSION['fname'];
+    $lname = $_SESSION['lname'];
+    $applicantMessage = $_POST['applicant_message'];
     $fileName = $_FILES['resume']['name'];
     $tempFileName = $_FILES['resume']['tmp_name'];
     $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
@@ -48,7 +84,7 @@ if (isset($_POST['submitApplicationBtn'])) {
             $accountID = $account['accountID'];
             $applicant_message = trim($_POST['applicant_message']);
 
-            uploadApplication($pdo, $postID, $accountID, $applicant_message, $completeFileName);
+            uploadApplication($pdo, $postID, $accountID, $fname, $lname, $applicantMessage, $completeFileName);
 
             header('Location: ../ApplicantHome.php');
             exit();
@@ -195,24 +231,38 @@ if (isset($_POST['registerUserBtn'])) {
     $fname = sanitizeInput($_POST['fname']);
     $lname = sanitizeInput($_POST['lname']);
     $email = sanitizeInput($_POST['email']);
-    $password = sanitizeInput(password_hash($_POST['password'], PASSWORD_DEFAULT));
+    $password = sanitizeInput($_POST['password']);
     $role = sanitizeInput($_POST['role']);
 
     if (!empty($fname) && !empty($lname) && !empty($email) && !empty($password) && !empty($role)) {
+        // Password strength check
+        if (strlen($password) < 5 || 
+            !preg_match('/[A-Z]/', $password) || 
+            !preg_match('/[a-z]/', $password) || 
+            !preg_match('/[0-9]/', $password) || 
+            !preg_match('/[^a-zA-Z0-9\s]/', $password)) {
+            $_SESSION['message'] = "Password must be at least 5 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+            header("Location: ../register.php");
+            exit;
+        }
+
+        // If password is strong, hash it.
+        $password = password_hash($password, PASSWORD_DEFAULT);
+
         $insertQuery = registerAccount($pdo, $fname, $lname, $email, $password, $role);
 
         if ($insertQuery) {
             $_SESSION['message'] = "Account registered successfully!";
             header("Location: ../login.php");
-            exit();
+            exit;
         } else {
-            $_SESSION['message'] = "An error occurred during registration.";
+            $_SESSION['message'] = "An error occurred during registration. Please try again.";
             header("Location: ../register.php");
-            exit();
+            exit;
         }
     } else {
         $_SESSION['message'] = "Please fill in all fields.";
         header("Location: ../register.php");
-        
+        exit;
     }
 }

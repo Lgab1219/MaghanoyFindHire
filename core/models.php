@@ -3,6 +3,48 @@
 require_once 'dbConfig.php';
 
 
+// Get receiver's information if current role is HR
+function getApplicantDetailsByAccountID($pdo, $accountID) {
+    $query = "SELECT fname, lname FROM accounts WHERE accountID = ?";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$accountID]);
+    return $stmt->fetch();
+}
+
+// Get all messages in descending order for the specific postID and accountID
+function getAllMessages($pdo, $postID, $accountID, $currentFname, $currentLname) {
+    $query = "SELECT * FROM messages 
+              WHERE postID = ? AND accountID = ?
+              AND ((senderFname = ? AND senderLname = ?) 
+              OR (receiverFname = ? AND receiverLname = ?))
+              ORDER BY timestamp DESC";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$postID, $accountID, $currentFname, $currentLname, $currentFname, $currentLname]);
+    return $stmt->fetchAll();
+}
+
+
+// Send message from applicant side
+function sendMessage($pdo, $senderFname, $senderLname, $receiverFname, $receiverLname, $message, $postID, $accountID) {
+    $query = "INSERT INTO messages (senderFname, senderLname, receiverFname, receiverLname, message, postID, accountID) 
+              VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$senderFname, $senderLname, $receiverFname, $receiverLname, $message, $postID, $accountID]);
+}
+
+
+
+// Gets all accepted applications to be able to show them
+function getAcceptedApplicationsByPostID($pdo, $postID) {
+    $query = "SELECT a.*, u.fname, u.lname 
+              FROM accepted_applications a
+              JOIN accounts u ON a.accountID = u.accountID
+              WHERE a.postID = ?";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$postID]);
+    return $stmt->fetchAll();
+}
+
 
 // Checks whether an applicant's submitted application is accepted or rejected
 function getApplicationStatus($pdo, $accountID) {
@@ -21,20 +63,17 @@ function getApplicationStatus($pdo, $accountID) {
 
 // When HR accepts application, a query gets sent to the accepted applications table
 function acceptApplication($pdo, $applicationID) {
-    $query = "
-        INSERT INTO accepted_applications (postID, accountID, fname, lname)
-        SELECT a.postID, a.accountID, ac.fname, ac.lname
-        FROM applications a
-        JOIN accounts ac ON a.accountID = ac.accountID
-        WHERE a.applicationID = :applicationID
-    ";
+    $query = "INSERT INTO accepted_applications (postID, accountID, fname, lname)
+              SELECT a.postID, a.accountID, a.fname, a.lname
+              FROM applications a
+              WHERE a.applicationID = ?";
     $stmt = $pdo->prepare($query);
-    $stmt->execute(['applicationID' => $applicationID]);
+    $stmt->execute([$applicationID]);
 
     // Remove the application from the applications table
-    $deleteQuery = "DELETE FROM applications WHERE applicationID = :applicationID";
+    $deleteQuery = "DELETE FROM applications WHERE applicationID = ?";
     $deleteStmt = $pdo->prepare($deleteQuery);
-    $deleteStmt->execute(['applicationID' => $applicationID]);
+    $deleteStmt->execute([$applicationID]);
 }
 
 
@@ -85,14 +124,13 @@ function getAllApplications($pdo) {
 
 
 // Uploads application to the database and the resume in the file path
-function uploadApplication($pdo, $postID, $accountID, $applicant_message, $resumeFilePath) {
+function uploadApplication($pdo, $postID, $accountID, $fname, $lname, $applicant_message, $resumeFilePath) {
     $stmt = $pdo->prepare("
-        INSERT INTO applications (postID, accountID, applicant_message, resumeFilePath)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO applications (postID, accountID, fname, lname, applicant_message, resumeFilePath)
+        VALUES (?, ?, ?, ?, ?, ?)
     ");
-    
-    $stmt->execute([$postID, $accountID, $applicant_message, $resumeFilePath
-    ]);
+
+    $stmt->execute([$postID, $accountID, $fname, $lname, $applicant_message, $resumeFilePath]);
 
     $_SESSION['message'] = "Application submitted successfully!";
 }
