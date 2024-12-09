@@ -26,7 +26,6 @@ body {
     background-attachment: fixed;  /* Keeps the background fixed during scrolling */
 }
 
-
 </style>
 
     <!-- Navbar -->
@@ -45,10 +44,8 @@ body {
     ?>
 
     <?php if (isset($_SESSION['fname'])) : ?>
-        <div id="applicant_account_container">
-            <div id="applicant_account">
-                <h3 style="color: white;">Hello, <?php echo $_SESSION['fname'] . " " . $_SESSION['lname']; ?>!</h3>
-            </div>
+        <div class="account_container">
+            <div class="account"><h3 style="color: white;">Hello, <?php echo $_SESSION['fname'] . " " . $_SESSION['lname']; ?>!</h3></div>
             <form action="core/logout.php" method="POST" style="margin: -8em 0 0 -2em;">
                 <button type="submit" class="logout_button">Logout</button>
             </form>
@@ -67,56 +64,53 @@ body {
     $posts = empty($searchResults) ? getAllPosts($pdo) : $searchResults;
     ?>
 
-    <div class="applicant_main">
-        <h2>Jobs available</h2>
+<div class="applicant_main">
+    <h2>Jobs available</h2>
 
-        <!-- Job Search Form -->
-        <form action="core/handleForms.php" method="POST">
-            <input type="text" name="search" placeholder="Search for a job post:" class="searchJobUserInput">
-            <input type="submit" value="Search" name="searchJobBtn" class="searchJobUserButton">
-        </form><br><br>
+    <form action="core/handleForms.php" method="POST">
+        <input type="text" name="search" placeholder="Search for a job post:" class="searchJobUserInput">
+        <input type="submit" value="Search" name="searchJobBtn" class="searchJobUserButton">
+    </form><br><br>
 
-        <div class="searchResults">
-            <!-- Displaying Posts -->
-            <?php if (is_array($posts) && !empty($posts)) : ?>
-                <?php foreach ($posts as $post) : 
-                    // Check if the applicant has already applied for the post
-                    $hasApplied = hasApplicantApplied($pdo, $accountID, $post['postID']);
-                    $postStatus = "Pending";
-                
-                        foreach ($appStatus as $status) {
-                            if ($status['postID'] == $post['postID']) {
-                                $postStatus = $status['status'];
-                                break;
-                            }
+    <div class="searchResults">
+        <?php if (is_array($posts) && !empty($posts)) : ?>
+            <?php foreach ($posts as $post) :
+                // Check if the applicant has already applied for the post
+                $hasApplied = hasApplicantApplied($pdo, $accountID, $post['postID']);
+                $postStatus = "Pending";
+            
+                    foreach ($appStatus as $status) {
+                        if ($status['postID'] == $post['postID']) {
+                            $postStatus = $status['status'];
+                            break;
                         }
-                ?>
-                    <!-- Post Container -->
-                    <div id="applicant_post_container" style="width: 50%;">
-                        <h3><?php echo htmlspecialchars($post['post_title']); ?></h3>
-                        <p><?php echo htmlspecialchars($post['post_desc']); ?></p>
-                        <h4>Posted by: <?php echo htmlspecialchars($post['fname'] . ' ' . $post['lname']); ?></h4>
-                
-                            <!-- Status Display & Application Buttons -->
-                            <?php if ($hasApplied && $postStatus == "Pending") : ?>
-                                <p><em>You have already applied for this job.</em></p>
-                                <p>Status: <strong><?php echo htmlspecialchars($postStatus); ?></strong></p>
-                                <button><a href="Messenger.php?accountID=<?php echo $accountID; ?>&postID=<?php echo $post['postID']; ?>" style="text-decoration: none; color: black;">Message HR</a></button>
-                            <?php elseif (!$hasApplied && $postStatus == "Accepted") : ?>
+                    }
+            ?>
+                <div id="applicant_post_container">
+                    <h3 style="color: #004E98;"><?php echo htmlspecialchars($post['post_title']); ?></h3>
+                    <p><?php echo htmlspecialchars($post['post_desc']); ?></p>
+                    <h4 style="color: #ff822f;">Posted by: <?php echo htmlspecialchars($post['fname'] . ' ' . $post['lname']); ?></h4>
+                        <!-- Status Display & Application Buttons -->
+                        <?php if ($hasApplied && $postStatus == "Pending") : ?>
                             <p><em>You have already applied for this job.</em></p>
                             <p>Status: <strong><?php echo htmlspecialchars($postStatus); ?></strong></p>
-                            <button><a href="Messenger.php?accountID=<?php echo $accountID; ?>&postID=<?php echo $post['postID']; ?>" style="text-decoration: none; color: black;">Message HR</a></button>
+                            <a href="Messenger.php?accountID=<?php echo $accountID; ?>&postID=<?php echo $post['postID']; ?>" id="messageButton">Message HR</a>
+                            <?php elseif (!$hasApplied && $postStatus == "Accepted") : ?>
+                                <p><em>You have already applied for this job.</em></p>
+                                <p>Status: <strong><?php echo htmlspecialchars($postStatus); ?></strong></p>
+                                <a href="Messenger.php?accountID=<?php echo $accountID; ?>&postID=<?php echo $post['postID']; ?>" id="messageButton">Message HR</a>
                         <?php else : ?>
-                            <button><a href="ApplicationForm.php?postID=<?php echo htmlspecialchars($post['postID']); ?>" style="text-decoration: none; color: black;">Submit an application</a></button>
+                            <a href="ApplicationForm.php?postID=<?php echo htmlspecialchars($post['postID']); ?>" style="text-decoration: none;" id="submitApplicationButton">Submit an application</a>
                         <?php endif; ?>
-                    </div>
-                    <br>
-                <?php endforeach; ?>
-            <?php else : ?>
-                <p>No job posts available.</p>
-            <?php endif; ?>
+
+                </div>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <p>No job posts available.</p>
+        <?php endif; ?>
     </div>
 </div>
+
 
 </body>
 </html>

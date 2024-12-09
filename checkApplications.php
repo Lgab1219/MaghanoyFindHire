@@ -17,10 +17,25 @@ require_once 'core/models.php';
 
 <body>
 
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+
+    /* Add a background color with double gradients */
+    background: linear-gradient(to bottom, #ffffff 80%, transparent),
+                linear-gradient(to bottom, #FF6700 100%, rgba(255, 0, 0, 0) 110%);
+    height: 100vh;  /* Make sure the body takes up the full viewport height */
+    background-attachment: fixed;  /* Keeps the background fixed during scrolling */
+}
+
+</style>
+
 <div class="nav_bar">
-    <span class="logo">
-    <h1>FindHire</h1>
-    </span>
+        <span class="logo_container">
+            <img src="resources/FindHire_Logo.png" alt="findhire_logo" id="logo">
+        </span>
 </div>
 
 <?php
@@ -31,7 +46,12 @@ require_once 'core/models.php';
     }
 
     if (isset($_SESSION['fname'])) { ?>
-        <div class="account">Hello, HR <?php echo htmlspecialchars($_SESSION['fname']); ?></div>
+      <div class="account_container">
+          <div class="account"><h3 style="color: white;">Hello, <?php echo $_SESSION['fname'] . " " . $_SESSION['lname']; ?>!</h3></div>
+          <form action="core/logout.php" method="POST" style="margin: -8em 0 0 -2em;">
+              <button type="submit" class="logout_button">Logout</button>
+          </form>
+      </div>
     <?php } else {
         header('Location: login.php');
     exit();
@@ -45,6 +65,7 @@ require_once 'core/models.php';
     }
 
     $postID = $_GET['postID'];
+    $postTitle = getPostById($pdo, $postID);
     $applications = getApplicationsByPostID($pdo, $postID);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -72,8 +93,8 @@ require_once 'core/models.php';
 
 <br>
 
-<div class="main">
-  <h2>Applications for Job Post #<?php echo htmlspecialchars($postID); ?></h2>
+<div id="checkApplicationsContainer">
+  <h2 style="color: #004E98;">Applications for <?php echo htmlspecialchars($postTitle['post_title']); ?></h2>
     <?php if (empty($applications)): ?>
         <p>No applications found for this job post.</p>
     <?php else: ?>
@@ -85,12 +106,11 @@ require_once 'core/models.php';
 
         <form method="POST" style="display:inline;">
           <input type="hidden" name="applicationID" value="<?php echo htmlspecialchars($application['applicationID']); ?>">
-          <button type="submit" name="action" value="accept" style="color: green;">Accept</button>
-          <button type="submit" name="action" value="reject" style="color: red;">Reject</button>
-          <button>
-          <a href="Messenger.php?accountID=<?php echo htmlspecialchars($application['accountID']); ?>&postID=<?php echo $postID; ?>" style="text-decoration: none; color: black;">Message Applicant</a>
-          </button>
+          <button type="submit" name="action" value="accept" class="accept-btn">Accept</button>
+          <button type="submit" name="action" value="reject" class="reject-btn">Reject</button>
+          <a href="Messenger.php?accountID=<?php echo htmlspecialchars($application['accountID']); ?>&postID=<?php echo $postID; ?>" id="messageButton" style="text-decoration: none;">Message Applicant</a>
         </form>
+
       </div>
 
       <br>
@@ -101,23 +121,21 @@ require_once 'core/models.php';
 
 <br><br>
 
-<h2>Accepted Applications:</h2>
+<h2 style="color: #E55F00;">Accepted Applications:</h2>
 <?php if (!empty($acceptedApplications)) : ?>
  <?php foreach ($acceptedApplications as $application) : ?>
     <div class="accepted_applicant">
         <p><strong>Applicant:</strong> <?php echo htmlspecialchars($application['fname'] . ' ' . $application['lname']); ?></p>
-    <button>
-        <a href="Messenger.php?accountID=<?php echo htmlspecialchars($application['accountID']); ?>&postID=<?php echo $postID; ?>" style="text-decoration: none; color: black;">Message Applicant</a>
-    </button>
+        <a href="Messenger.php?accountID=<?php echo htmlspecialchars($application['accountID']); ?>&postID=<?php echo $postID; ?>" id="messageButton" style="text-decoration: none;">Message Applicant</a>
     </div>
  <?php endforeach; ?>
+ <?php else : ?>
+  <p>No accepted applications found for this job post.</p>
     <?php endif; ?>
 
-  <br>
+  <br><br>
 
-  <button>
-    <a href="HRHome.php" style="text-decoration: none; color: black;">Return</a>
-  </button>
+  <a href="HRHome.php" style="text-decoration: none;" class="returnButton">Return</a>
 </div>
 
 </body>

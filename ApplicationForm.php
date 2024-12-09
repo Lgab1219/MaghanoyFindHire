@@ -15,9 +15,25 @@ require_once 'core/models.php';
 </head>
 <body>
 
+
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+
+    /* Add a background color with double gradients */
+    background: linear-gradient(to bottom, #ffffff 80%, transparent),
+                linear-gradient(to bottom, #FF6700 100%, rgba(255, 0, 0, 0) 110%);
+    
+    height: 100%;
+}
+
+</style>
+
 <div class="nav_bar">
-        <span class="logo">
-            <h1>FindHire</h1>
+        <span class="logo_container">
+            <img src="resources/FindHire_Logo.png" alt="findhire_logo" id="logo">
         </span>
 </div>
 
@@ -28,7 +44,12 @@ require_once 'core/models.php';
     }
 
     if(isset($_SESSION['fname'])) { ?>
-        <div class="account">Hello, Applicant <?php echo $_SESSION['fname']; ?></div>
+        <div class="account_container">
+            <div class="account"><h3 style="color: white;">Hello, <?php echo $_SESSION['fname'] . " " . $_SESSION['lname']; ?>!</h3></div>
+            <form action="core/logout.php" method="POST" style="margin: -8em 0 0 -2em;">
+                <button type="submit" class="logout_button">Logout</button>
+            </form>
+        </div>
 <?php } else {
     header('Location: login.php');
 }
@@ -40,7 +61,7 @@ require_once 'core/models.php';
 
 <br>
 
-<div class="main">
+<div id="applicationFormContainer">
 
     <div class="post_container" style="width: 50%;">
         <h3><?php echo htmlspecialchars($post['post_title']); ?></h3>
@@ -50,7 +71,7 @@ require_once 'core/models.php';
 
     <br>
 
-    <form action="core/handleForms.php" method="POST" enctype="multipart/form-data">
+    <form action="core/handleForms.php" method="POST" enctype="multipart/form-data" id="applicationForm">
         <input type="hidden" name="postID" value="<?php echo htmlspecialchars($postID); ?>">
 
         <label for="applicant_message">Why are you best fit for the role given?</label><br>
@@ -61,14 +82,9 @@ require_once 'core/models.php';
         <input type="file" name="resume" id="resume">
         <br><br>
 
-        <input type="submit" value="Submit" name="submitApplicationBtn">
+        <input type="submit" value="Submit" name="submitApplicationBtn" id="applicantSubmitButton"><br><br>
+        <a href="ApplicantHome.php" style="text-decoration: none;" class="returnButton">Cancel</a>
     </form>
-
-    <br>
-
-    <button>
-        <a href="ApplicantHome.php" style="text-decoration: none; color: black;">Cancel</a>
-    </button>
 
 </div>
 

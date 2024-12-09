@@ -33,9 +33,9 @@ body {
 <?php foreach($posts as $post) : ?>
 
 <div class="post_container">
-    <h3><?php echo $post['post_title']; ?></h3>
+    <h3 style="color: #004E98;"><?php echo $post['post_title']; ?></h3>
     <p><?php echo $post['post_desc']; ?></p>
-    <h4>Posted by: <?php echo $post['fname'] . $post['lname']; ?></h4>
+    <h4 style="color: #ff822f;">Posted by: <?php echo $post['fname'] . $post['lname']; ?></h4>
 </div>
 
 <br>

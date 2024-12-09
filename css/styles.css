@@ -1,18 +1,256 @@
+
+.message {
+    background-color: #ff822f;
+    color: #ffffff;
+    padding: 1em 2em 2em 2em;
+    margin: 2em 0 0 0;
+}
+
+.messages {
+    margin: 2em;
+    border: 2px solid #ff822f;
+    border-radius: 10px;
+    padding: 5em;
+    background-color: white;
+}
+
+#messageBarContainer {
+    margin: 0 0 0 2em;
+
+}
+
+#message_bar {
+    width: 50%;
+    height: 3.5em;
+    resize: none;
+    border: 1px solid #ff822f;
+}
+
+/* Accept Button */
+.accept-btn {
+    background-color: #28a745;
+    color: white;
+    transition: all 0.3s ease;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.accept-btn:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+/* Reject Button */
+.reject-btn {
+    background-color: #dc3545;
+    color: white;
+    transition: all 0.3s ease;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.reject-btn:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+#messageButton {
+    font-size: 1em;
+    width: auto; /* Adjust width as needed */
+    padding: 1em 2em;
+    cursor: pointer;
+    background-color: #004E98; /* Blue background */
+    border: none;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 1em 0; /* Adjust spacing */
+    transition: all 0.3s ease;
+}
+
+#messageButton:hover {
+    background-color: #003B75; /* Darker shade */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 59, 117, 0.5);
+}
+
+
+#applicantSubmitButton {
+    font-size: 1em;
+    width: 14.5%;
+    padding: 1em 2em 1em 2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #ff822f;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    color: #ffffff;
+}
+
+#applicantSubmitButton:hover {
+    background-color: #FF6700;  /* Darker shade for register */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px #E55F00;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+}
+
+#applicant_message {
+    resize: none;
+    border: 2px solid #E55F00;
+    width: 40%;
+    height: 40vh;
+}
+
+#applicationFormContainer {
+    margin: 0 2em 5em 2em;
+}
+
+#checkApplicationsContainer {
+    border: 2px solid #004E98;
+    display: block;
+    width: 60%;
+    margin: 0 2em 0 2em;
+    padding: 1em 2em 1em 2em;
+    background-color: white;
+}
+
+#submitApplicationButton {
+    font-size: 1em;
+    width: 15%;
+    padding: 1em 2em 1em 2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #004E98;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    color: #ffffff;
+    text-align: center; /* Center the text inside the button */
+}
+
+#submitApplicationButton:hover {
+    background-color: #003B75;  /* Darker shade for register */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px #003B75;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+}
+
+#checkApplicationsButton {
+    font-size: 1em;
+    width: 15%;
+    padding: 1em 2em 1em 2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #004E98;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    color: #ffffff;
+    text-align: center; /* Center the text inside the button */
+    margin: 0 0 0 2em;
+}
+
+#checkApplicationsButton:hover {
+    background-color: #003B75;  /* Darker shade for register */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px #003B75;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+}
+
+.deletePostButton {
+    font-size: 1em;
+    width: 15%;
+    padding: 1em 2em 1em 2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #ff822f;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    color: #ffffff;
+    text-align: center; /* Center the text inside the button */
+    margin: 0 0 0 2em;
+}
+
+.deletePostButton:hover {
+    background-color: #FF6700;  /* Darker shade for register */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px #E55F00;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+}
+
+#deletePostContainer {
+    margin: 2em;
+    padding: 2em;
+    border: 2px solid #004E98;
+    border-radius: 5px;
+}
+
+#post_title {
+    width: 15%;
+    height: 2em;
+    border: 2px solid #004E98;
+}
+
+#post_desc {
+    border: 2px solid #004E98;
+    width: 50%;
+    height: 20vh;
+    resize: none;
+}
+
+.returnButton {
+    display: inline-block;
+    text-align: center;
+    padding: 1em 2em 1em 2em;
+    width: 9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color:#003B75;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+}
+
+.returnButton:hover {
+    background-color: #003B75;  /* Darker shade for register */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 78, 152, 0.5);
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+}
+
+.createPostForm {
+    margin: 0 2em 0 2em;
+    padding: 2em;
+    background-color: #ffffff;
+    border: 2px solid #004E98;
+    border-radius: 15px;
+}
+
 .searchResults {
     width: 60%;
-    border: 1px solid #E55F00;
+    border: 2px solid #E55F00;
     padding: 1em;
     background-color: #ffffff;
 }
 
 .applicant_main {
-    margin: -180px 0 0 0;
+    margin: 2em 0 2em 0;
     padding: 0 0 0 3em;
 }
 
 #applicant_post_container {
-    border: 2px solid black;
-    padding: 1em;
+    border: 1px solid #E55F00;
+    padding: 2em;
+    width: 92.5%;
+    margin: 2em 0 0 0;
 }
 
 #applicant_account {
@@ -21,7 +259,6 @@
     margin: 0 4em 0 -4em;
     background-color: #E55F00;
     padding: 2em;
-    border-radius: 15px;
 }
 
 #applicant_account_container {
@@ -85,6 +322,7 @@
     display: flex;
     justify-content: space-around;
     margin: 50px 0 0 0;
+    width: 85%;
 }
 
 .searchUserCreatedResults_form {
@@ -100,7 +338,8 @@
 }
 
 .account_container {
-    display: inline-block;
+    position: absolute;
+    right: 0%;
 }
 
 .account {
@@ -113,8 +352,8 @@
 }
 
 .post_container {
-    border: 2px solid black;
-    padding: 1em;
+    border: 1px solid #E55F00;
+    padding: 2em;
 }
 
 .posts_frame {
@@ -269,7 +508,7 @@ body {
 }
 
 .accepted_applicant {
-    border: 2px solid black;
+    border: 2px solid #ff822f;
     width: 50%;
     padding: 1em;
 }

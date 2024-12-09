@@ -33,15 +33,11 @@ body {
 <?php foreach($postsUser as $post) : ?>
 
 <div class="post_container">
-    <h3><?php echo $post['post_title']; ?></h3>
+    <h3 style="color: #004E98;"><?php echo $post['post_title']; ?></h3>
     <p><?php echo $post['post_desc']; ?></p>
-    <h4>Posted by: <?php echo $post['fname'] . " " . $post['lname']; ?></h4>
-    <button>
-    <a href="deletePost.php?postID=<?php echo htmlspecialchars($post['postID']); ?>" style="text-decoration: none; color: black;">Delete</a>
-    </button>
-    <button>
-    <a href="checkApplications.php?postID=<?php echo htmlspecialchars($post['postID']); ?>" style="text-decoration: none; color: black;" target="_top">Check Applications</a>
-    </button>
+    <h4 style="color: #ff822f;">Posted by: <?php echo $post['fname'] . " " . $post['lname']; ?></h4><br>
+    <a href="deletePost.php?postID=<?php echo htmlspecialchars($post['postID']); ?>" target="_top" style="text-decoration: none;" class="deletePostButton">Delete</a>
+    <a href="checkApplications.php?postID=<?php echo htmlspecialchars($post['postID']); ?>" style="text-decoration: none;" id="checkApplicationsButton" target="_top">Check Applications</a>
 </div>
 
 <br>

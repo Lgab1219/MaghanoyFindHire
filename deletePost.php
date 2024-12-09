@@ -29,29 +29,39 @@ if (!$post) {
 </head>
 <body>
 
+<style>
+    body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+
+    /* Add a background color with double gradients */
+    background: linear-gradient(to bottom, #ffffff 80%, transparent),
+                linear-gradient(to bottom, #FF6700 100%, rgba(255, 0, 0, 0) 110%);
+    background-attachment: fixed;  /* Keeps the background fixed during scrolling */
+    }
+</style>
+
 <div class="nav_bar">
-        <span class="logo">
-            <h1>FindHire</h1>
+        <span class="logo_container">
+            <img src="resources/FindHire_Logo.png" alt="findhire_logo" id="logo">
         </span>
 </div>
 
 <br><br>
 
 <div class="delete">
-    <h3 style="color: red;">Are you sure you want to delete this job post?</h3>
-    <div class="post_container">
-        <h3><?php echo htmlspecialchars($post['post_title']); ?></h3>
+    <h3 style="color: #E55F00;">Are you sure you want to delete this job post?</h3>
+    <div id="deletePostContainer">
+        <h3 style="color: #E55F00;"><?php echo htmlspecialchars($post['post_title']); ?></h3>
         <p><?php echo htmlspecialchars($post['post_desc']); ?></p>
-        <h4>Posted by: <?php echo htmlspecialchars($post['fname'] . ' ' . $post['lname']); ?></h4>
+        <h4 style="color: #E55F00;">Posted by: <?php echo htmlspecialchars($post['fname'] . ' ' . $post['lname']); ?></h4>
     </div>
     
     <form action="core/handleForms.php" method="POST">
         <input type="hidden" name="postID" value="<?php echo htmlspecialchars($postID); ?>">
         <input type="hidden" name="fromIframe" value="1">
-        <button type="submit" name="deletePostBtn">Delete</button>
-        <button>
-            <a href="HRHome.php" style="text-decoration: none; color: black;">Cancel</a>
-        </button>
+        <button type="submit" name="deletePostBtn" class="deletePostButton">Delete</button>
+        <a href="HRHome.php" style="text-decoration: none;" class="returnButton">Cancel</a>
     </form>
 
 
